@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'pathname'
+require 'rexec'
+require 'rexec/daemon'
+
+ROOT = Pathname(__dir__).realpath
+BIN = (ROOT + "my-script.rb").realpath
+
+class MyScriptDaemon < RExec::Daemon::Base
+	@@var_directory = ROOT + "/var/"
+
+	def self.working_directory
+		ROOT
+	end
+
+	def self.run
+		# Drop priviledges
+		# RExec.change_user("nobody")
+
+		$stdout.puts "Starting server @ #{Time.now.to_s}"
+		@@server_task = RExec::Task.open(BIN, :out => $stdout, :err => $stdout) 
+
+		begin 
+			@@server_task.wait
+		ensure
+			@@server_task.close
+		end
+	end
+
+	def self.shutdown
+		$stderr.puts "Stopping server [#{@@server_task.pid}] @ #{Time.now.to_s}"
+		@@server_task.stop
+	end
+end
+
+MyScriptDaemon.daemonize
+
