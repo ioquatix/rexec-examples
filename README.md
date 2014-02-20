@@ -8,7 +8,7 @@ The script we will run as a daemon is `my-script.rb`.
 
 ## 1- Daemon Execute
 
-The simplest option is to run the script using daemon-exec which runs the progress in the background. Combined with `nohup` this provides a robust way to launch a process which will run in the background to completion.
+The simplest option is to run the script using `daemon-exec` which runs the progress in the background. Combined with `nohup` this provides a robust way to launch a process which will run in the background to completion.
 
 	> daemon-exec --help
 	Usage: daemon-exec [-I stdin] [-O stdout] [-E stderr] [script/stdin]
